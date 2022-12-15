@@ -1,12 +1,15 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="397" height="397" fill="none" viewBox="0 0 397 397">
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="400" fill="none" viewBox="0 0 400 400">
   <circle
-  class=".progress-ring__circle"
-  cx="198.5"
+  id="progress-ring__circle"
+  cx="196.5"
   cy="198.5"
   r="181"
   stroke="white"
   stroke-width="35"
   fill="transparent"
+  stroke-dasharray = "1137 1137"
+  stroke-dashoffset ="7"
+  transform="rotate(-90 196 198)"
   />
   
   
