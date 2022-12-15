@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="397" height="397" fill="none" viewBox="0 0 397 397">
   <circle
-  class=".progress-ring__circle"
+  class="progress-ring__circle"
   cx="198.5"
   cy="198.5"
   r="181"

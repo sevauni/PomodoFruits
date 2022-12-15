@@ -7,9 +7,6 @@ body {
     margin: 0;
 }
 
-
-
-
 .flex-container {
     height: 100%;
     padding: 0;
@@ -29,8 +26,6 @@ body {
 
 
 .center-text{
-
-    
     font-family: 'Cherry Bomb';
     font-style: normal;
     font-weight: 400;
@@ -54,3 +49,12 @@ body {
     margin-bottom: 1em;
 }
 
+.image-clock{
+
+
+    max-width: 90%;
+}
+
+.progress-ring__circle {
+    stroke-dasharray: 10 20;
+  }
