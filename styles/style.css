@@ -25,6 +25,8 @@ body {
 
 .orange-svg-img {
   width: 300px;
+  pointer-events: none;
+  transition: stroke-dashoffset 0.35s;
 }
 
 .header-container {

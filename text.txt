@@ -1,0 +1,6 @@
+// document.querySelector(".orange-svg-img").getSVGDocument().getElementById("progress-ring__circle").setAttribute("stroke-dashoffset", "1137");
+
+// document.querySelector(".orange-svg-img").getSVGDocument().getElementById("progress-ring__circle").getAttribute("stroke-dasharray")
+// document.querySelector(".orange-svg-img").getSVGDocument().getElementById("progress-ring__circle").setAttribute("stroke", "black");
+
+//document.querySelector(".orange-svg-img").getSVGDocument().getElementById("progress-ring__circle").setAttribute("stroke-dashoffset", `${getSvgCirclePxAmount(svgImg)}`);
