@@ -1,0 +1,56 @@
+html, body {
+    height: 100%;
+    background: #2DA3B4;
+}
+
+body {
+    margin: 0;
+}
+
+
+
+
+.flex-container {
+    height: 100%;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content:center;
+}
+
+.flex-item {
+    padding: 5px;
+    line-height: 20px;
+    font-weight: bold;
+    font-size: 2em;
+    text-align: center;
+}
+
+
+.center-text{
+
+    
+    font-family: 'Cherry Bomb';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 64px;
+    line-height: 64px;    
+    display: flex;
+    align-items: center;
+    text-align: center;
+    letter-spacing: 0.01em;
+    color: #FFFFFF;
+
+}
+
+.header-text{
+    font-family: 'Cherry Bomb';
+    font-style: normal;
+    font-size: 2em;  
+    text-align: center;
+    letter-spacing: 0.01em;
+    color: #FFFFFF;
+    margin-bottom: 1em;
+}
+
