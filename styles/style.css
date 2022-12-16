@@ -1,16 +1,18 @@
 html,
 body {
   background-color: #2962FF;
+  
 }
 
 
 
 
 .flex-container {
-  display: flex;
+  display:flex;
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
+  opacity: 0;
 }
 
 
@@ -21,12 +23,15 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+  margin-top: 0;
 }
 
 .orange-svg-img {
-  width: 300px;
+  font-style: normal;
+  width: 150%;
   pointer-events: none;
   transition: stroke-dashoffset 0.35s;
+  margin-top: 0;
 }
 
 .header-container {
