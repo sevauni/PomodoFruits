@@ -1,101 +1,156 @@
 "use strict";
 let svgImg = null;
-let pause = false;
-let timerTargetTimeMinutes = 3;
+let timerTargetTimeMinutes = 5;
+let frameId = null;
+let lastCall = 0;
+const workTime = 15;
+const relaxTime = 5;
+const speedCorrectionSync = 57000;
 
+
+const startSound = new Audio('/audio/tick.ogg');
+const readySound = new Audio('/audio/ready.ogg');
+
+const timerStatus = {
+  pause: false,
+  mode: "start"
+};
 window.addEventListener('load', function () {
   document.querySelector(".flex-container").style.opacity = "100";
   svgImg = document.querySelector(".orange-svg-img").getSVGDocument().getElementById("progress-ring__circle");
   setProcentage(svgImg, 100);
   document.querySelector(".orange-svg-div").addEventListener('click', startTimers, { once: true });
   setStartMode();
-
-  //setPauseMode();
-
 });
-
-//document.querySelector(".orange-svg-div").addEventListener('click', startTimer, { once: true });
-
 function startTimers() {
-  let speed = Math.floor(timerTargetTimeMinutes * 60000 / getSvgCirclePxAmount(svgImg));
+  switch (timerStatus.mode) {
+    case "start":
+      document.querySelector(".orange-svg-div").addEventListener('click', pauseTimer);
+      timerStatus.mode = "work";
+      startTimers();
+      break;
+    case "work":
+      startTimerWork();
+      break;
+    case "relax":
+      startTimerRelax();
+
+      break;
+    default:
+      console.error("Wrong mode slelector");
+  }
+
+
+
+
+}
+function startTimerWork() {
+  timerTargetTimeMinutes = workTime;
+  let speed = Math.ceil(timerTargetTimeMinutes * speedCorrectionSync / getSvgCirclePxAmount(svgImg));
   startCircle(speed);
   startCountDownTimer();
+  timerStatus.mode = "work";
+  setImgMode();
+  startSound.play();
 }
+function startTimerRelax() {
+  timerTargetTimeMinutes = relaxTime;
+  let speed = Math.ceil(timerTargetTimeMinutes * speedCorrectionSync / getSvgCirclePxAmount(svgImg));
+  startCircle(speed);
+  startCountDownTimer(speed);
+  timerStatus.mode = "relax";
+  setImgMode();
+}
+function pauseTimer() {
+  timerStatus.pause = !timerStatus.pause;
 
-
-
-
-
+  if (!timerStatus.pause) {
+    setImgMode();
+    startSound.play();
+  } else {
+    setPauseMode();
+    startSound.pause();
+    startSound.currentTime = 0;
+  }
+}
+function setImgMode() {
+  switch (timerStatus.mode) {
+    case "start":
+      setStartMode();
+      break;
+    case "pause":
+      setPauseMode();
+      break;
+    case "relax":
+      setRelaxMode();
+      break;
+    case "work":
+      setWorkMode();
+      break;
+    default:
+      console.error("Wrong mode");
+  }
+}
 function startCircle(speedPx) {
 
   let maxPx = getSvgCirclePxAmount(svgImg);
-  let id = null;
   let pos = 0;
-  setWorkMode();
-  clearInterval(id);
-
-  id = setInterval(frame, speedPx);
-
+  clearInterval(frameId);
+  setProcentage(svgImg, 0);
+  frameId = setInterval(frame, speedPx);
   function frame() {
-    if (pos === maxPx) {
-      //document.querySelector(".orange-svg-div").addEventListener('click', startTimer, { once: true });
-      clearInterval(id);
-      //setRelaxMode();
-    } else {
+    if (timerStatus.pause) {
+      return;
+    }
+    if (pos !== maxPx) {
       pos++;
       setPixels(svgImg, pos);
     }
   }
 }
-
-
 function startCountDownTimer() {
   let id = null;
-  let countSetTime = addMinutes(new Date(), 1).getTime();
+  let countSetTime = addMinutes(new Date(), timerTargetTimeMinutes).getTime();
   clearInterval(id);
-  id = setInterval(tick, 500);
+  id = setInterval(tick, 10);
   tick();
   function tick() {
+    if (timerStatus.pause) {
+      return;
+    }
     let countDownDateNow = new Date().getTime();
     if (countDownDateNow >= countSetTime) {
       clearInterval(id);
-      setRelaxMode();
+      clearInterval(frameId);
+      readySound.play();
+      timerStatus.mode = timerStatus.mode === "work" ? "relax" : "work";
+      startTimers();
     } else {
       drawDate(countSetTime - countDownDateNow);
     }
   }
 }
-
-
-
-
-
 function drawDate(milliseconds) {
+  if (lastCall - milliseconds > 1000) {
+    return;
+  }
+
+  lastCall = milliseconds;
   let minutes = Math.floor((milliseconds % (1000 * 60 * 60)) / (1000 * 60)).toString();
   let seconds = Math.floor((milliseconds % (1000 * 60)) / 1000).toString();
 
   if (seconds.length < 2) {
     seconds = `0` + seconds;
   }
-
   if (minutes.length < 2) {
     minutes = `0` + minutes;
   }
-
-
   document.querySelector(".timer-container").innerHTML = `${minutes}:${seconds}`;
-
-
+  return;
 }
-
-
-
-
 function addMinutes(date, minutes) {
   return new Date(date.getTime() + minutes * 60000);
 }
-
-
 function getSvgCirclePxAmount(svgElement) {
   let result = Number(svgElement.getAttribute("stroke-dasharray").split(',')[0]);
   return result;
@@ -158,14 +213,22 @@ function setRelaxMode() {
 function setPauseMode() {
   document.querySelector(".orange-svg-img").getSVGDocument().getElementById("g2651").setAttribute("style", "display:none"); //chillbubble
   document.querySelector(".orange-svg-img").getSVGDocument().getElementById("layer2").setAttribute("style", "display:none"); //bubble
-  document.querySelector(".orange-svg-img").getSVGDocument().getElementById("layer4").setAttribute("style", "display:none"); //work setup
+  //document.querySelector(".orange-svg-img").getSVGDocument().getElementById("layer4").setAttribute("style", "display:inline"); //work setup
   document.querySelector(".orange-svg-img").getSVGDocument().getElementById("layer5").setAttribute("style", "display:none"); //chill
-  document.querySelector(".orange-svg-img").getSVGDocument().getElementById("g1025").setAttribute("style", "display:none"); //hand
+
+  //document.querySelector(".orange-svg-img").getSVGDocument().getElementById("g1025").setAttribute("style", "display:none"); //hand layer
+  //document.querySelector(".orange-svg-img").getSVGDocument().getElementById("path1704").setAttribute("style", "stroke:#9b6026;stroke-width:2.00561;stroke-opacity:1"); //hand
+
+  //document.querySelector(".orange-svg-img").getSVGDocument().getElementById("path1704").setAttribute("style", ""); //hand
+  //document.querySelector(".orange-svg-img").getSVGDocument().getElementById("path1704").setAttribute("", ""); //hand
+
+  //document.querySelector(".orange-svg-img").getSVGDocument().getElementById("g2672").setAttribute("style", "display:inline"); //laptop
   document.querySelector(".orange-svg-img").getSVGDocument().getElementById("path1696").setAttribute("style", "display:none"); //sad mouth
   document.querySelector(".orange-svg-img").getSVGDocument().getElementById("path1021").setAttribute("style", "display:none"); //sad eyes
   document.querySelector(".orange-svg-img").getSVGDocument().getElementById("g5644").setAttribute("style", "display:inline"); //pause
   document.querySelector(".orange-svg-img").getSVGDocument().getElementById("path2816").setAttribute("style", "display:none"); //bubble img
   document.querySelector(".orange-svg-img").getSVGDocument().getElementById("layer3").setAttribute("style", "display:none"); //normal face
+
   document.querySelector(".header-container-under").innerHTML = "Pause";
   document.querySelector(".header-container-under").style.color = "#ed8f20ff";
 
