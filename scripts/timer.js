@@ -1,7 +1,7 @@
 "use strict";
 let svgImg = null;
 let pause = false;
-let timerTargetTimeMinutes = 1;
+let timerTargetTimeMinutes = 3;
 
 window.addEventListener('load', function () {
   document.querySelector(".flex-container").style.opacity = "100";
