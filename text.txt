@@ -5,7 +5,7 @@
 
 //document.querySelector(".orange-svg-img").getSVGDocument().getElementById("progress-ring__circle").setAttribute("stroke-dashoffset", `${getSvgCirclePxAmount(svgImg)}`);
 
-
+document.getElementById(id).innerHTML = new HTML
 layer2
 
 
@@ -19,7 +19,8 @@ display:inline
 
 display:none
 
-
+document.querySelector(".timer-container")
+document.getElementById(".timer-container").innerHTML
 
 
   document.querySelector(".orange-svg-img").getSVGDocument().getElementById("g2651").setAttribute("style", "display:none"); //chillbubble

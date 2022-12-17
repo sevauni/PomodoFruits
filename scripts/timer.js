@@ -1,30 +1,32 @@
 "use strict";
 let svgImg = null;
-let lastCall = 0;
-let timesUp = false;
+let pause = false;
+let timerTargetTimeMinutes = 1;
 
 window.addEventListener('load', function () {
   document.querySelector(".flex-container").style.opacity = "100";
   svgImg = document.querySelector(".orange-svg-img").getSVGDocument().getElementById("progress-ring__circle");
   setProcentage(svgImg, 100);
-  document.querySelector(".orange-svg-div").addEventListener('click', startTimer, { once: true });
+  document.querySelector(".orange-svg-div").addEventListener('click', startTimers, { once: true });
   setStartMode();
 
   //setPauseMode();
 
 });
 
+//document.querySelector(".orange-svg-div").addEventListener('click', startTimer, { once: true });
+
+function startTimers() {
+  let speed = Math.floor(timerTargetTimeMinutes * 60000 / getSvgCirclePxAmount(svgImg));
+  startCircle(speed);
+  startCountDownTimer();
+}
 
 
 
 
 
-
-
-
-
-
-function startTimer(svgElement = svgImg) {
+function startCircle(speedPx) {
 
   let maxPx = getSvgCirclePxAmount(svgImg);
   let id = null;
@@ -32,24 +34,58 @@ function startTimer(svgElement = svgImg) {
   setWorkMode();
   clearInterval(id);
 
-  let countDownDate = new Date();
-  let show = addMinutes(countDownDate, 1).getTime();
+  id = setInterval(frame, speedPx);
 
-  id = setInterval(frame, 10);
   function frame() {
-    if (pos === maxPx && timesUp) {
+    if (pos === maxPx) {
+      //document.querySelector(".orange-svg-div").addEventListener('click', startTimer, { once: true });
       clearInterval(id);
-      document.querySelector(".orange-svg-div").addEventListener('click', startTimer, { once: true });
-      setRelaxMode();
+      //setRelaxMode();
     } else {
-      timerTick(show);
-      if (timesUp) {
-        pos++;
-        setPixels(svgImg, pos);
-      }
-
+      pos++;
+      setPixels(svgImg, pos);
     }
   }
+}
+
+
+function startCountDownTimer() {
+  let id = null;
+  let countSetTime = addMinutes(new Date(), 1).getTime();
+  clearInterval(id);
+  id = setInterval(tick, 500);
+  tick();
+  function tick() {
+    let countDownDateNow = new Date().getTime();
+    if (countDownDateNow >= countSetTime) {
+      clearInterval(id);
+      setRelaxMode();
+    } else {
+      drawDate(countSetTime - countDownDateNow);
+    }
+  }
+}
+
+
+
+
+
+function drawDate(milliseconds) {
+  let minutes = Math.floor((milliseconds % (1000 * 60 * 60)) / (1000 * 60)).toString();
+  let seconds = Math.floor((milliseconds % (1000 * 60)) / 1000).toString();
+
+  if (seconds.length < 2) {
+    seconds = `0` + seconds;
+  }
+
+  if (minutes.length < 2) {
+    minutes = `0` + minutes;
+  }
+
+
+  document.querySelector(".timer-container").innerHTML = `${minutes}:${seconds}`;
+
+
 }
 
 
@@ -59,46 +95,22 @@ function addMinutes(date, minutes) {
   return new Date(date.getTime() + minutes * 60000);
 }
 
-//var countDownDate = new Date().getTime();
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 function getSvgCirclePxAmount(svgElement) {
   let result = Number(svgElement.getAttribute("stroke-dasharray").split(',')[0]);
   return result;
 }
-
 function setProcentage(svgElement, percents = 100) {
   let result = scale(percents, 0, 100, getSvgCirclePxAmount(svgElement), 0);
   svgElement.setAttribute("stroke-dashoffset", `${result}`);
 }
-
-
 function setPixels(svgElement, pixels) {
   let result = getSvgCirclePxAmount(svgElement) - pixels;
   svgElement.setAttribute("stroke-dashoffset", `${result}`);
 }
-
 function scale(number, inMin, inMax, outMin, outMax) {
   return (number - inMin) * (outMax - outMin) / (inMax - inMin) + outMin;
 }
-
-
 function setStartMode() {
   document.querySelector(".orange-svg-img").getSVGDocument().getElementById("g2651").setAttribute("style", "display:none"); //chillbubble
   document.querySelector(".orange-svg-img").getSVGDocument().getElementById("layer4").setAttribute("style", "display:none"); //work setup
@@ -112,7 +124,6 @@ function setStartMode() {
 
 
 }
-
 function setWorkMode() {
   document.querySelector(".orange-svg-img").getSVGDocument().getElementById("g2651").setAttribute("style", "display:none"); //chillbubble
   document.querySelector(".orange-svg-img").getSVGDocument().getElementById("layer2").setAttribute("style", "display:none"); //bubble
@@ -129,8 +140,6 @@ function setWorkMode() {
   document.querySelector(".header-container-under").style.color = "#ed8f20ff";
 
 }
-
-
 function setRelaxMode() {
   document.querySelector(".orange-svg-img").getSVGDocument().getElementById("g2651").setAttribute("style", "display:inline"); //chillbubble
   document.querySelector(".orange-svg-img").getSVGDocument().getElementById("layer2").setAttribute("style", "display:none"); //bubble
@@ -146,8 +155,6 @@ function setRelaxMode() {
   document.querySelector(".header-container-under").style.color = "#659c35ff";
 
 }
-
-
 function setPauseMode() {
   document.querySelector(".orange-svg-img").getSVGDocument().getElementById("g2651").setAttribute("style", "display:none"); //chillbubble
   document.querySelector(".orange-svg-img").getSVGDocument().getElementById("layer2").setAttribute("style", "display:none"); //bubble
@@ -162,22 +169,4 @@ function setPauseMode() {
   document.querySelector(".header-container-under").innerHTML = "Pause";
   document.querySelector(".header-container-under").style.color = "#ed8f20ff";
 
-}
-
-
-
-
-function timerTick(setMillis) {
-  let now = new Date().getTime();
-  let timeLeft = setMillis - now;
-  if (now - lastCall > 1000) {
-    lastCall = now;
-    let minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
-    let seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
-    console.log(minutes, seconds);
-    document.querySelector(".timer-container").innerHTML = `${minutes}:${seconds}`;
-    if (setMillis === now) {
-      timesUp = true;
-    }
-  }
 }
