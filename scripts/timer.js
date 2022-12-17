@@ -1,15 +1,15 @@
 "use strict";
 let svgImg = null;
-let timerTargetTimeMinutes = 5;
+let timerTargetTimeMinutes = 1;
 let frameId = null;
 let lastCall = 0;
-const workTime = 15;
-const relaxTime = 5;
+const workTime = 0.5;
+const relaxTime = 1;
 const speedCorrectionSync = 57000;
 
 
-const startSound = new Audio('/audio/tick.ogg');
-const readySound = new Audio('/audio/ready.ogg');
+const startSound = new Audio('./audio/tick.ogg');
+const readySound = new Audio('./audio/ready.ogg');
 
 const timerStatus = {
   pause: false,
