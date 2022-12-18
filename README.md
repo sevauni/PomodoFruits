@@ -1,6 +1,7 @@
 # PomodoFruits
 
-![github preview](https://user-images.githubusercontent.com/12978622/208287863-68e477b1-1878-415d-b296-fb0237eb723d.PNG)
+![github preview](https://user-images.githubusercontent.com/12978622/208288282-37e715ef-0c73-44df-8674-3958e3ff8671.PNG)
+
 
 This is another implementation of the Pomodoro timer to help focus on work.
 
