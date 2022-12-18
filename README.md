@@ -5,5 +5,5 @@ This is another implementation of the Pomodoro timer to help focus on work.
 
 **Installation:**
 
-Just clone the repo to the web server folder.
-Easy as pie. Orange pie.
+Just clone the repo to the web server folder.  
+**Easy as pie.**   **Orange pie.**
