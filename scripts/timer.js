@@ -2,8 +2,7 @@
 let svgImg = null;
 let timerTargetTimeMinutes = 1;
 let frameId = null;
-let lastCall = 0;
-const workTime = 0.5;
+const workTime = 1;
 const relaxTime = 1;
 const speedCorrectionSync = 57000;
 
@@ -131,11 +130,6 @@ function startCountDownTimer() {
   }
 }
 function drawDate(milliseconds) {
-  if (lastCall - milliseconds > 1000) {
-    return;
-  }
-
-  lastCall = milliseconds;
   let minutes = Math.floor((milliseconds % (1000 * 60 * 60)) / (1000 * 60)).toString();
   let seconds = Math.floor((milliseconds % (1000 * 60)) / 1000).toString();
 
@@ -207,7 +201,7 @@ function setRelaxMode() {
   document.querySelector(".orange-svg-img").getSVGDocument().getElementById("path2816").setAttribute("style", "display:inline;fill:#ffffff;stroke:#000000;stroke-width:0.963187"); //bubble img
   document.querySelector(".orange-svg-img").getSVGDocument().getElementById("g5644").setAttribute("style", "display:none"); //pause
   document.querySelector(".header-container-under").innerHTML = "Break";
-  document.querySelector(".header-container-under").style.color = "#659c35ff";
+  document.querySelector(".header-container-under").style.color = "white";
 
 }
 function setPauseMode() {

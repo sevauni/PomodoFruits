@@ -28,7 +28,7 @@ body {
 
 .orange-svg-img {
   font-style: normal;
-  width: 150%;
+  width: 100%;
   pointer-events: none;
   transition: stroke-dashoffset 0.35s;
   margin-top: 0;
